@@ -4,7 +4,7 @@ const createChatMachine = (from) =>
   createMachine(
     {
       id: `chat-${from}`,
-      initial: 'scheduleExam_homeDate',
+      initial: 'start',
       context: {
         retries: 0,
         date: '',
@@ -40,9 +40,8 @@ const createChatMachine = (from) =>
         },
         scheduleExam_homeTime: {
           on: {
-            GOT_DATE: {
+            GOT_TIME: {
               target: 'scheduleExam_homeDone',
-              actions: ['setTime'],
             },
           },
         },

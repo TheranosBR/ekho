@@ -95,12 +95,12 @@ class Session {
     }
   }
 
-  onTransition(state: any, event: any) {
+  async onTransition(state: any, event: any) {
     console.info(state.value);
 
     switch (state.value) {
       case 'start': {
-        this.client.sendText(
+        await this.client.sendText(
           this.chatID,
           'Seja bem-vindo(a) ao nosso atendimento virtual! Em que posso te ajudar hoje?\n\n' +
             ' 1 - Marcação de Exames (Inclusive coleta domiciliar)\n' +
@@ -113,7 +113,7 @@ class Session {
       }
 
       case 'scheduleExam_identify': {
-        this.client.sendText(
+        await this.client.sendText(
           this.chatID,
           'Para agilizarmos o atendimento, por favor informe o seu CPF'
         );
@@ -121,7 +121,7 @@ class Session {
       }
 
       case 'scheduleExam_collect': {
-        this.client.sendText(
+        await this.client.sendText(
           this.chatID,
           'Onde você gostaria de fazer seu exame?\n\n' +
             ' 1 - Coleta Domiciliar\n' +
@@ -131,12 +131,12 @@ class Session {
       }
 
       case 'scheduleExam_homeAddress': {
-        this.client.sendText(this.chatID, 'Qual o endereço da coleta?');
+        await this.client.sendText(this.chatID, 'Qual o endereço da coleta?');
         break;
       }
 
       case 'scheduleExam_homeDate': {
-        this.client.sendText(
+        await this.client.sendText(
           this.chatID,
           'Em qual dia você gostaria de realizar a coleta?'
         );
@@ -146,13 +146,24 @@ class Session {
       case 'scheduleExam_homeTime': {
         const date = this.service.state.context.date;
 
-        this.client.sendText(
+        await this.client.sendText(
           this.chatID,
           'Qual dos seguintes horários você gostaria de ser atendido?\n\n' +
             ` 1) ${date} às 09:15\n` +
             ` 2) ${date} às 10:20\n` +
             ` 3) ${date} às 10:30\n` +
             ` 4) ${date} às 12:40\n`
+        );
+        break;
+      }
+
+      case 'scheduleExam_homeDone': {
+        const date = this.service.state.context.date;
+
+        await this.client.sendText(
+          this.chatID,
+          'Seu exame foi marcado com sucesso!\n\n' +
+            `No dia ${date}, você será atendido às 10:20, enviaremos uma mensagem quando o carro estiver a caminho da sua residência.`
         );
         break;
       }
